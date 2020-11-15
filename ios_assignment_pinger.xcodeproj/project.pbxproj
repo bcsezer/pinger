@@ -9,21 +9,29 @@
 /* Begin PBXBuildFile section */
 		A8185F1B25606F2400DBA2A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8185F1A25606F2400DBA2A4 /* AppDelegate.swift */; };
 		A8185F1D25606F2400DBA2A4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8185F1C25606F2400DBA2A4 /* SceneDelegate.swift */; };
-		A8185F1F25606F2400DBA2A4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8185F1E25606F2400DBA2A4 /* ViewController.swift */; };
+		A8185F1F25606F2400DBA2A4 /* PingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8185F1E25606F2400DBA2A4 /* PingViewController.swift */; };
 		A8185F2225606F2400DBA2A4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A8185F2025606F2400DBA2A4 /* Main.storyboard */; };
 		A8185F2425606F2500DBA2A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A8185F2325606F2500DBA2A4 /* Assets.xcassets */; };
 		A8185F2725606F2500DBA2A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A8185F2525606F2500DBA2A4 /* LaunchScreen.storyboard */; };
+		A8185F322560726100DBA2A4 /* IpAdressModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8185F312560726100DBA2A4 /* IpAdressModal.swift */; };
+		A8185F352560841600DBA2A4 /* GetIpAdress.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8185F342560841600DBA2A4 /* GetIpAdress.swift */; };
+		A8FE9B73256125C900A66A31 /* homeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FE9B72256125C900A66A31 /* homeViewController.swift */; };
+		A8FE9B7C256134EA00A66A31 /* pingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FE9B7B256134EA00A66A31 /* pingTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A8185F1725606F2400DBA2A4 /* ios_assignment_pinger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ios_assignment_pinger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8185F1A25606F2400DBA2A4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A8185F1C25606F2400DBA2A4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		A8185F1E25606F2400DBA2A4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A8185F1E25606F2400DBA2A4 /* PingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingViewController.swift; sourceTree = "<group>"; };
 		A8185F2125606F2400DBA2A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A8185F2325606F2500DBA2A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A8185F2625606F2500DBA2A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A8185F2825606F2500DBA2A4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A8185F312560726100DBA2A4 /* IpAdressModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IpAdressModal.swift; sourceTree = "<group>"; };
+		A8185F342560841600DBA2A4 /* GetIpAdress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetIpAdress.swift; sourceTree = "<group>"; };
+		A8FE9B72256125C900A66A31 /* homeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = homeViewController.swift; sourceTree = "<group>"; };
+		A8FE9B7B256134EA00A66A31 /* pingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pingTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +64,51 @@
 		A8185F1925606F2400DBA2A4 /* ios_assignment_pinger */ = {
 			isa = PBXGroup;
 			children = (
+				A8FE9B7A256134CD00A66A31 /* tableViewCell */,
 				A8185F1A25606F2400DBA2A4 /* AppDelegate.swift */,
 				A8185F1C25606F2400DBA2A4 /* SceneDelegate.swift */,
-				A8185F1E25606F2400DBA2A4 /* ViewController.swift */,
+				A8FE9B6D2561230200A66A31 /* ViewControllers */,
 				A8185F2025606F2400DBA2A4 /* Main.storyboard */,
 				A8185F2325606F2500DBA2A4 /* Assets.xcassets */,
 				A8185F2525606F2500DBA2A4 /* LaunchScreen.storyboard */,
 				A8185F2825606F2500DBA2A4 /* Info.plist */,
+				A8185F372560886500DBA2A4 /* Class */,
+				A8185F392560887100DBA2A4 /* Get Ip function */,
 			);
 			path = ios_assignment_pinger;
+			sourceTree = "<group>";
+		};
+		A8185F372560886500DBA2A4 /* Class */ = {
+			isa = PBXGroup;
+			children = (
+				A8185F312560726100DBA2A4 /* IpAdressModal.swift */,
+			);
+			path = Class;
+			sourceTree = "<group>";
+		};
+		A8185F392560887100DBA2A4 /* Get Ip function */ = {
+			isa = PBXGroup;
+			children = (
+				A8185F342560841600DBA2A4 /* GetIpAdress.swift */,
+			);
+			path = "Get Ip function";
+			sourceTree = "<group>";
+		};
+		A8FE9B6D2561230200A66A31 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				A8FE9B72256125C900A66A31 /* homeViewController.swift */,
+				A8185F1E25606F2400DBA2A4 /* PingViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		A8FE9B7A256134CD00A66A31 /* tableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				A8FE9B7B256134EA00A66A31 /* pingTableViewCell.swift */,
+			);
+			path = tableViewCell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,8 +181,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A8185F1F25606F2400DBA2A4 /* ViewController.swift in Sources */,
+				A8185F352560841600DBA2A4 /* GetIpAdress.swift in Sources */,
+				A8FE9B73256125C900A66A31 /* homeViewController.swift in Sources */,
+				A8185F1F25606F2400DBA2A4 /* PingViewController.swift in Sources */,
+				A8FE9B7C256134EA00A66A31 /* pingTableViewCell.swift in Sources */,
 				A8185F1B25606F2400DBA2A4 /* AppDelegate.swift in Sources */,
+				A8185F322560726100DBA2A4 /* IpAdressModal.swift in Sources */,
 				A8185F1D25606F2400DBA2A4 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -289,6 +337,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZDG25F63H5;
 				INFOPLIST_FILE = ios_assignment_pinger/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -308,6 +357,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZDG25F63H5;
 				INFOPLIST_FILE = ios_assignment_pinger/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
