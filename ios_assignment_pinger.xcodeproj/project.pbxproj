@@ -17,6 +17,7 @@
 		A8185F352560841600DBA2A4 /* GetIpAdress.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8185F342560841600DBA2A4 /* GetIpAdress.swift */; };
 		A8FE9B73256125C900A66A31 /* homeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FE9B72256125C900A66A31 /* homeViewController.swift */; };
 		A8FE9B7C256134EA00A66A31 /* pingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FE9B7B256134EA00A66A31 /* pingTableViewCell.swift */; };
+		A8FE9B8125613A3400A66A31 /* SwiftyPing.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FE9B8025613A3400A66A31 /* SwiftyPing.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		A8185F342560841600DBA2A4 /* GetIpAdress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetIpAdress.swift; sourceTree = "<group>"; };
 		A8FE9B72256125C900A66A31 /* homeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = homeViewController.swift; sourceTree = "<group>"; };
 		A8FE9B7B256134EA00A66A31 /* pingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pingTableViewCell.swift; sourceTree = "<group>"; };
+		A8FE9B8025613A3400A66A31 /* SwiftyPing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyPing.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +50,7 @@
 		A8185F0E25606F2400DBA2A4 = {
 			isa = PBXGroup;
 			children = (
+				A8FE9B7F25613A2600A66A31 /* SwiftyPing Class */,
 				A8185F1925606F2400DBA2A4 /* ios_assignment_pinger */,
 				A8185F1825606F2400DBA2A4 /* Products */,
 			);
@@ -109,6 +112,14 @@
 				A8FE9B7B256134EA00A66A31 /* pingTableViewCell.swift */,
 			);
 			path = tableViewCell;
+			sourceTree = "<group>";
+		};
+		A8FE9B7F25613A2600A66A31 /* SwiftyPing Class */ = {
+			isa = PBXGroup;
+			children = (
+				A8FE9B8025613A3400A66A31 /* SwiftyPing.swift */,
+			);
+			path = "SwiftyPing Class";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -188,6 +199,7 @@
 				A8185F1B25606F2400DBA2A4 /* AppDelegate.swift in Sources */,
 				A8185F322560726100DBA2A4 /* IpAdressModal.swift in Sources */,
 				A8185F1D25606F2400DBA2A4 /* SceneDelegate.swift in Sources */,
+				A8FE9B8125613A3400A66A31 /* SwiftyPing.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

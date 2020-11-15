@@ -90,8 +90,8 @@ extension PingViewController: UITableViewDelegate,UITableViewDataSource{
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "pingCell", for: indexPath) as! pingTableViewCell
         
-        cell.IPStatusText.text = "Reachable"
-        cell.IPText.text = localIpAdress
+        cell.IPStatusText.text = "Reachable" //ipAdresModalArray[indexPath.row].adress
+        cell.IPText.text = localIpAdress //ipAdresModalArray[indexPath.row].status
         
         
         return cell
