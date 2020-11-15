@@ -13,10 +13,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        
+        //MARK:Check internet connection
+        if NetworkMonitor.shared.isConnected {
+            //İf connected make home page as root
+            
+            let board = UIStoryboard.init(name: "Main", bundle: nil)
+            let homePage = board.instantiateViewController(identifier: "homePage")
+            self.window?.rootViewController = homePage
+            window?.makeKeyAndVisible()
+            
+        }else{
+            
+            DispatchQueue.main.async {
+                
+                self.makeAllert(titleInput: "Error", messageInput: "No internet connections. Check your internet and restart your app")
+            }
+        }
+        
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -47,6 +61,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
-
+    func makeAllert(titleInput :String,messageInput:String){
+            let alert = UIAlertController(title: titleInput, message: messageInput, preferredStyle: UIAlertController.Style.alert)
+            self.window?.rootViewController?.present(alert, animated: true, completion: nil)
+        }
 }
 

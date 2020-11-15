@@ -8,11 +8,20 @@
 import UIKit
 
 class PingViewController: UIViewController {
+    
     var ping: SwiftyPing?
+    
+    
+    
     @IBOutlet var buttons: [UIButton]!
+    
+    @IBOutlet weak var filterButton: UIButton!
+    @IBOutlet weak var stopButton: UIButton!
+    @IBOutlet weak var restartButton: UIButton!
     
     var localIpAdress = ""
     var counter = 1
+    var buttonCliked : Bool?
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -20,6 +29,12 @@ class PingViewController: UIViewController {
     var ipAdresModalArray = [IpAdressModal]() //An Array of IP Modal which I will use in tableView
     var ipAdresses = [String]() // I get this because when I ping ip adresses I need all the possible IP adresses
     var newIpAdress = "" // This is just string :)
+    
+    
+    @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet weak var progressBarLabel: UILabel!
+    var totalTime = 254
+    var secondsPassed = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,12 +49,33 @@ class PingViewController: UIViewController {
         configureButtons()
         increaseIpAdress()
         
-       startPing()
+        if buttonCliked == true{
+            startPing()
+        }else{
+            print("blabla")
+        }
         
-        
-       
      
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        ping?.stopPinging(resetSequence: true)
+    }
+    @IBAction func restartClicked(_ sender: UIButton) {
+        stopButton.isEnabled = true
+        filterButton.isEnabled = false
+        startPing()
+    }
+    
+    @IBAction func stopButtonClicked(_ sender: UIButton) {
+        buttonCliked = false
+        self.ping?.stopPinging(resetSequence: true)
+        stopButton.isEnabled = false
+        restartButton.isEnabled = true
+        filterButton.isEnabled = true
+    }
+    
+  
     
     
     //MARK:My IP starts with 192 . Instead of filling the Array manually, I filled it up to 254 with the loop.
@@ -84,13 +120,13 @@ class PingViewController: UIViewController {
     
     func startPing() {
         
-            
         var count = 0
+        
         do {
-            ping = try SwiftyPing(host: ipAdresses[count], configuration: PingConfiguration(interval: 0.4, with: 1), queue: DispatchQueue.global())
+            ping = try SwiftyPing(host: ipAdresses[count], configuration: PingConfiguration(interval: 1, with: 1 ), queue: DispatchQueue.global())
                ping?.observer = { (response) in
                    DispatchQueue.main.async {
-//                       var message = "\(response.duration! * 1000) ms"
+                       var duration = "\(response.duration! * 1000) ms"
                     var message = "Reachable"
                        if let error = response.error {
                         
@@ -111,14 +147,20 @@ class PingViewController: UIViewController {
                         let results = IpAdressModal(address: self.ipAdresses[count], success: message)
                         self.ipAdresModalArray.append(results)
                            print(message)
+                        print(duration)
                         count += 1
                        
                         
                     }
                     self.tableView.reloadData()
+                    
+                    let index = IndexPath(row: self.ipAdresModalArray.count-1, section: 0)
+                        self.tableView.scrollToRow(at: index, at: .bottom, animated: true)
+                    
                    }
                }
-//              ping?.targetCount =
+//              ping?.targetCount = 2
+               try ping?.startPinging()
                try ping?.startPinging()
            } catch {
                print(error.localizedDescription)

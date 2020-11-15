@@ -209,8 +209,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d4k-9M-juP" userLabel="buttonsView">
                                 <rect key="frame" x="0.0" y="88" width="414" height="68"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="61" translatesAutoresizingMaskIntoConstraints="NO" id="vY8-cR-s5q">
-                                        <rect key="frame" x="150" y="19" width="256" height="30"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="44" translatesAutoresizingMaskIntoConstraints="NO" id="23T-5c-ygd">
+                                        <rect key="frame" x="8" y="19" width="398" height="30"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x6w-V5-c4h">
                                                 <rect key="frame" x="0.0" y="0.0" width="115" height="30"/>
@@ -219,12 +219,30 @@
                                                     <constraint firstAttribute="height" constant="30" id="VnT-h0-0KC"/>
                                                     <constraint firstAttribute="width" constant="115" id="tq2-1r-uNV"/>
                                                 </constraints>
+                                                <state key="normal" title="Stop">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="restartClicked:" destination="6Vr-Dn-cUX" eventType="touchUpInside" id="tfw-9r-oE3"/>
+                                                    <action selector="stopButtonClicked:" destination="6Vr-Dn-cUX" eventType="touchUpInside" id="kHC-94-IRH"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aHF-5n-whl">
+                                                <rect key="frame" x="159" y="0.0" width="115" height="30"/>
+                                                <color key="backgroundColor" red="0.17863657990000001" green="0.17863657990000001" blue="0.17863657990000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="115" id="Ful-Wu-3YI"/>
+                                                    <constraint firstAttribute="height" constant="30" id="mX6-ea-AMb"/>
+                                                </constraints>
                                                 <state key="normal" title="Restart">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="restartClicked:" destination="6Vr-Dn-cUX" eventType="touchUpInside" id="bUF-pO-SZ5"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jZj-8d-UXL">
-                                                <rect key="frame" x="176" y="0.0" width="80" height="30"/>
+                                                <rect key="frame" x="318" y="0.0" width="80" height="30"/>
                                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="80" id="oaa-9h-SX4"/>
@@ -237,17 +255,17 @@
                                             </button>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="9Yc-Ek-Z75"/>
+                                            <constraint firstAttribute="height" constant="30" id="aLo-xa-P7D"/>
                                         </constraints>
                                     </stackView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="tertiarySystemGroupedBackgroundColor"/>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="23T-5c-ygd" secondAttribute="trailing" constant="8" id="BF9-AL-Mr2"/>
+                                    <constraint firstItem="23T-5c-ygd" firstAttribute="leading" secondItem="d4k-9M-juP" secondAttribute="leading" constant="8" id="FQc-k5-sVX"/>
                                     <constraint firstAttribute="height" constant="68" id="Fbc-C2-mBi"/>
-                                    <constraint firstAttribute="bottom" secondItem="vY8-cR-s5q" secondAttribute="bottom" constant="19" id="KfF-Uf-ANH"/>
-                                    <constraint firstItem="vY8-cR-s5q" firstAttribute="top" secondItem="d4k-9M-juP" secondAttribute="top" constant="19" id="fDI-Fc-NS6"/>
-                                    <constraint firstItem="vY8-cR-s5q" firstAttribute="leading" secondItem="d4k-9M-juP" secondAttribute="leading" constant="150" id="hIX-Eb-lNe"/>
-                                    <constraint firstAttribute="trailing" secondItem="vY8-cR-s5q" secondAttribute="trailing" constant="8" id="vIM-Tj-Kin"/>
+                                    <constraint firstAttribute="bottom" secondItem="23T-5c-ygd" secondAttribute="bottom" constant="19" id="v8f-w0-ufP"/>
+                                    <constraint firstItem="23T-5c-ygd" firstAttribute="top" secondItem="d4k-9M-juP" secondAttribute="top" constant="19" id="vRZ-8q-hze"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eAG-nB-s88" userLabel="progressIndicatorView">
@@ -296,9 +314,15 @@
                     </view>
                     <navigationItem key="navigationItem" title="PingerApp" id="2la-6c-9z5"/>
                     <connections>
+                        <outlet property="filterButton" destination="jZj-8d-UXL" id="Hnw-Rh-DAG"/>
+                        <outlet property="progressBarLabel" destination="ehl-xz-BZl" id="Voi-42-iZR"/>
+                        <outlet property="progressView" destination="nbw-sl-1fo" id="byq-0l-scj"/>
+                        <outlet property="restartButton" destination="aHF-5n-whl" id="fLI-e3-zaS"/>
+                        <outlet property="stopButton" destination="x6w-V5-c4h" id="6zy-Ny-cpd"/>
                         <outlet property="tableView" destination="qdK-Rg-4Ay" id="fU7-HY-pNq"/>
                         <outletCollection property="buttons" destination="x6w-V5-c4h" collectionClass="NSMutableArray" id="e1W-27-MSk"/>
                         <outletCollection property="buttons" destination="jZj-8d-UXL" collectionClass="NSMutableArray" id="8Dp-YX-dyg"/>
+                        <outletCollection property="buttons" destination="x6w-V5-c4h" collectionClass="NSMutableArray" id="dCk-9D-BRW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a3Z-7B-6Oi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -308,7 +332,7 @@
         <!--Navigation Controller-->
         <scene sceneID="qK8-Ca-MVj">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Yiz-3l-M1G" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="homePage" automaticallyAdjustsScrollViewInsets="NO" id="Yiz-3l-M1G" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="8BZ-AA-kW4">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>

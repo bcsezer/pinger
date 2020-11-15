@@ -35,6 +35,7 @@ class homeViewController: UIViewController {
     
     @IBAction func startButtonClicked(_ sender: UIButton) {
         if localIp != ""{
+          
             performSegue(withIdentifier: "toPingVC", sender: self)
         }else{
             makeAllert(titleInput: "Error", messageInput: "Could not find any IP adress")
@@ -43,6 +44,11 @@ class homeViewController: UIViewController {
     }
     @IBAction func startInfoCLicked(_ sender: UIButton) {
         makeAllert(titleInput: "What is pinging ? ", messageInput: "Ping is a basic Internet program that allows a user to verify that a particular IP address exists and can accept requests.")
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? PingViewController{
+            destination.buttonCliked = true
+        }
     }
     
     

@@ -8,6 +8,7 @@
 import Foundation
 
 class IpAdressModal {
+    
     var address  = ""
     var success = ""
     
