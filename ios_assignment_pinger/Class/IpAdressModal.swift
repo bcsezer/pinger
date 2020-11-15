@@ -7,7 +7,7 @@
 
 import Foundation
 
-class IpAdress {
+class IpAdressModal {
     var address  = ""
     var success = ""
     

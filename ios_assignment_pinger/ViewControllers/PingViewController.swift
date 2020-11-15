@@ -8,7 +8,7 @@
 import UIKit
 
 class PingViewController: UIViewController {
-    
+    var ping: SwiftyPing?
     @IBOutlet var buttons: [UIButton]!
     
     var localIpAdress = ""
@@ -17,7 +17,7 @@ class PingViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
  
-    var ipAdresModalArray = [IpAdress]() //An Array of IP Modal which I will use in tableView
+    var ipAdresModalArray = [IpAdressModal]() //An Array of IP Modal which I will use in tableView
     var ipAdresses = [String]() // I get this because when I ping ip adresses I need all the possible IP adresses
     var newIpAdress = "" // This is just string :)
     
@@ -26,13 +26,17 @@ class PingViewController: UIViewController {
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
-       
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         configureButtons()
         increaseIpAdress()
+        
+       startPing()
+        
+        
        
      
     }
@@ -77,21 +81,67 @@ class PingViewController: UIViewController {
         }
     }
     
+    
+    func startPing() {
+        
+            
+        var count = 0
+        do {
+            ping = try SwiftyPing(host: ipAdresses[count], configuration: PingConfiguration(interval: 0.4, with: 1), queue: DispatchQueue.global())
+               ping?.observer = { (response) in
+                   DispatchQueue.main.async {
+//                       var message = "\(response.duration! * 1000) ms"
+                    var message = "Reachable"
+                       if let error = response.error {
+                        
+                           if error == .responseTimeout {
+                               message = "Unreachable"
+                           } else if error == .hostNotFound {
+                               print(error)
+                               message = "Unreachable"
+                           }else{
+                            message = "Unreachable"
+                           }
+                       }
+                    
+                    if count == 254{
+                        self.ping?.stopPinging()
+                    }else{
+                        print(self.ipAdresses[count])
+                        let results = IpAdressModal(address: self.ipAdresses[count], success: message)
+                        self.ipAdresModalArray.append(results)
+                           print(message)
+                        count += 1
+                       
+                        
+                    }
+                    self.tableView.reloadData()
+                   }
+               }
+//              ping?.targetCount =
+               try ping?.startPinging()
+           } catch {
+               print(error.localizedDescription)
+           }
+        
+    }
+    
+    
 
 }
 
 extension PingViewController: UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return ipAdresModalArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "pingCell", for: indexPath) as! pingTableViewCell
         
-        cell.IPStatusText.text = "Reachable" //ipAdresModalArray[indexPath.row].adress
-        cell.IPText.text = localIpAdress //ipAdresModalArray[indexPath.row].status
+        cell.IPStatusText.text = ipAdresModalArray[indexPath.row].success
+        cell.IPText.text = ipAdresModalArray[indexPath.row].address
         
         
         return cell
