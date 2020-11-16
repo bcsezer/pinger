@@ -33,6 +33,7 @@ class PingViewController: UIViewController {
     
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var progressBarLabel: UILabel!
+    
     var totalTime = 254
     var secondsPassed = 0
     
@@ -50,7 +51,7 @@ class PingViewController: UIViewController {
         increaseIpAdress()
         
         if buttonCliked == true{
-            startPing()
+            ping(index: 0)
         }else{
             print("blabla")
         }
@@ -64,7 +65,7 @@ class PingViewController: UIViewController {
     @IBAction func restartClicked(_ sender: UIButton) {
         stopButton.isEnabled = true
         filterButton.isEnabled = false
-        startPing()
+        
     }
     
     @IBAction func stopButtonClicked(_ sender: UIButton) {
@@ -117,56 +118,85 @@ class PingViewController: UIViewController {
         }
     }
     
-    
-    func startPing() {
-        
-        var count = 0
-        
-        do {
-            ping = try SwiftyPing(host: ipAdresses[count], configuration: PingConfiguration(interval: 1, with: 1 ), queue: DispatchQueue.global())
-               ping?.observer = { (response) in
-                   DispatchQueue.main.async {
-                       var duration = "\(response.duration! * 1000) ms"
-                    var message = "Reachable"
-                       if let error = response.error {
-                        
-                           if error == .responseTimeout {
-                               message = "Unreachable"
-                           } else if error == .hostNotFound {
-                               print(error)
-                               message = "Unreachable"
-                           }else{
-                            message = "Unreachable"
-                           }
-                       }
-                    
-                    if count == 254{
-                        self.ping?.stopPinging()
-                    }else{
-                        print(self.ipAdresses[count])
-                        let results = IpAdressModal(address: self.ipAdresses[count], success: message)
-                        self.ipAdresModalArray.append(results)
-                           print(message)
-                        print(duration)
-                        count += 1
-                       
-                        
+    func ping(index: Int) {
+        let once = try? SwiftyPing(host: ipAdresses[index], configuration: PingConfiguration(interval: 0.5, with: 5), queue: DispatchQueue.global())
+            once?.observer = { (response) in
+                var message = ""
+                if response.error != nil {
+                    print(response.error)
+                    print("not reachable \(response.ipAddress)")
+                    message = "Unreachable"
+                    once?.stopPinging()
+                    if index+1 <= 254 {
+                        self.ping(index: index+1)
                     }
-                    self.tableView.reloadData()
+                } else {
+                    print(response.ipAddress)
+                    print("Reachable")
+                    message = "Reachable"
+                    once?.stopPinging()
                     
-                    let index = IndexPath(row: self.ipAdresModalArray.count-1, section: 0)
-                        self.tableView.scrollToRow(at: index, at: .bottom, animated: true)
                     
-                   }
-               }
-//              ping?.targetCount = 2
-               try ping?.startPinging()
-               try ping?.startPinging()
-           } catch {
-               print(error.localizedDescription)
-           }
-        
-    }
+                    if index+1 <= 254 {
+                        self.ping(index: index+1)
+                    }
+                }
+                let results = IpAdressModal(address: self.ipAdresses[index], success: message)
+                self.ipAdresModalArray.append(results)
+                self.tableView.reloadData()
+            }
+            once?.targetCount = 1
+            try? once?.startPinging()
+        }
+//    func startPing(count:Int) {
+//
+//
+//        do {
+//            ping = try SwiftyPing(host: ipAdresses[count], configuration: PingConfiguration(interval: 1, with: 1 ), queue: DispatchQueue.global())
+//               ping?.observer = { (response) in
+//                   DispatchQueue.main.async {
+//                       var duration = "\(response.duration! * 1000) ms"
+//                    var message = "Reachable"
+//                       if let error = response.error {
+//
+//                           if error == .responseTimeout {
+//                               message = "Unreachable"
+//                           } else if error == .hostNotFound {
+//                               print(error)
+//                               message = "Unreachable"
+//                           }else{
+//                            message = "Unreachable"
+//                           }
+//                       }
+//
+//                    if count == 254{
+//                        self.ping?.stopPinging()
+//                    }else{
+//                        print(self.ipAdresses[count])
+//                        let results = IpAdressModal(address: self.ipAdresses[count], success: message)
+//                        self.ipAdresModalArray.append(results)
+//                           print(message)
+//                        print(duration)
+//                        self.startPing(count: count+1)
+//
+//
+//                    }
+//
+//
+//                   }
+////                let index = IndexPath(row: self.ipAdresModalArray.count-1, section: 0)
+////                    self.tableView.scrollToRow(at: index, at: .bottom, animated: true)
+//                self.tableView.reloadData()
+//
+//
+//               }
+//            // ping?.targetCount = 1
+//               try ping?.startPinging()
+//           } catch {
+//               print(error.localizedDescription)
+//           }
+//
+//    }
     
     
 
@@ -185,6 +215,11 @@ extension PingViewController: UITableViewDelegate,UITableViewDataSource{
         cell.IPStatusText.text = ipAdresModalArray[indexPath.row].success
         cell.IPText.text = ipAdresModalArray[indexPath.row].address
         
+        if (indexPath.row % 2) != 0 { //index'i çift olanları beyaz diğerlerini açık gri yap
+                   cell.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+               }else{
+                   cell.backgroundColor = #colorLiteral(red: 0.9549764661, green: 0.9549764661, blue: 0.9549764661, alpha: 1)
+               }
         
         return cell
     }

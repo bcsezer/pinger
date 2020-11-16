@@ -20,12 +20,12 @@ class pingTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        changeBackGroundColor()
+        changeBackTectColor()
         // Configure the view for the selected state
     }
     
     
-    func changeBackGroundColor(){
+    func changeBackTectColor(){
         if IPStatusText.text == "Reachable"{
             IPStatusText.textColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
         }else{
@@ -33,5 +33,9 @@ class pingTableViewCell: UITableViewCell {
         }
         
     }
+    
+    
+  
+
 
 }
