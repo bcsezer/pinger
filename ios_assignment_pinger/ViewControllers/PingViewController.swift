@@ -8,11 +8,12 @@
 import UIKit
 
 class PingViewController: UIViewController {
-    
+    var memoryIndex = 0
     var ping: SwiftyPing?
     
     
     
+    var timer = Timer()
     @IBOutlet var buttons: [UIButton]!
     
     @IBOutlet weak var filterButton: UIButton!
@@ -34,7 +35,7 @@ class PingViewController: UIViewController {
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var progressBarLabel: UILabel!
     
-    var totalTime = 254
+    var totalTime : Int?
     var secondsPassed = 0
     
     override func viewDidLoad() {
@@ -43,26 +44,40 @@ class PingViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         
+        timer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(progressBarUpdate), userInfo: nil, repeats: true)
+        
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        tableView.isHidden = true
         configureButtons()
         increaseIpAdress()
+      
         
-        if buttonCliked == true{
-            ping(index: 0)
-        }else{
-            print("blabla")
-        }
+        
+      
+            pinger(index: 0)
+        
+        
         
      
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        ping?.stopPinging(resetSequence: true)
+        ping?.stopPinging()
     }
     @IBAction func restartClicked(_ sender: UIButton) {
+        timer.invalidate()
+        secondsPassed = 0
+        progressBarLabel.text = "0 %"
+        timer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(progressBarUpdate), userInfo: nil, repeats: true)
+        ipAdresModalArray.removeAll()
+        tableView.reloadData()
+        
+        pinger(index: 0)
+        
         stopButton.isEnabled = true
         filterButton.isEnabled = false
         
@@ -70,7 +85,8 @@ class PingViewController: UIViewController {
     
     @IBAction func stopButtonClicked(_ sender: UIButton) {
         buttonCliked = false
-        self.ping?.stopPinging(resetSequence: true)
+        ping?.stopPinging()
+        timer.invalidate()
         stopButton.isEnabled = false
         restartButton.isEnabled = true
         filterButton.isEnabled = true
@@ -111,6 +127,39 @@ class PingViewController: UIViewController {
         
     }
     
+    func congigureUI(){
+        
+        if Int(progressView.progress * 100) <= 5{
+            tableView.isHidden = true
+            progressBarLabel.isHidden = false
+            
+        }else{
+            progressBarLabel.isHidden = false
+            tableView.isHidden = false
+        }
+       
+    }
+    
+    @objc func progressBarUpdate(){
+        if ipAdresses.isEmpty == false {
+            totalTime = ipAdresses.count
+            if secondsPassed < totalTime!{
+                secondsPassed += 1
+                
+              congigureUI()
+
+                progressView.progress = Float(secondsPassed) / Float(totalTime!)
+                progressBarLabel.text = String (Int(progressView.progress * 100)) + "%"
+                
+            }else{
+                timer.invalidate()
+                secondsPassed = 0
+            }
+        }
+        
+        
+    }
+    
     func configureButtons(){
         for button in buttons{
             button.layer.cornerRadius = 5
@@ -118,35 +167,45 @@ class PingViewController: UIViewController {
         }
     }
     
-    func ping(index: Int) {
-        let once = try? SwiftyPing(host: ipAdresses[index], configuration: PingConfiguration(interval: 0.5, with: 5), queue: DispatchQueue.global())
-            once?.observer = { (response) in
+    func pinger(index: Int) {
+         ping = try? SwiftyPing(host: ipAdresses[index], configuration: PingConfiguration(interval: 0.5, with: 2), queue: DispatchQueue.global())
+            ping?.observer = { (response) in
+               
                 var message = ""
                 if response.error != nil {
-                    print(response.error)
-                    print("not reachable \(response.ipAddress)")
+
+                    print(response.error!)
+                    print("not reachable \(response.ipAddress!)")
                     message = "Unreachable"
-                    once?.stopPinging()
+                    self.ping?.haltPinging()
+
                     if index+1 <= 254 {
-                        self.ping(index: index+1)
+                        self.pinger(index: index+1)
+                        self.memoryIndex = index
                     }
                 } else {
-                    print(response.ipAddress)
+                    print(response.ipAddress!)
                     print("Reachable")
                     message = "Reachable"
-                    once?.stopPinging()
-                    
-                    
+                    self.ping?.haltPinging()
+
+
                     if index+1 <= 254 {
-                        self.ping(index: index+1)
+                        self.pinger(index: index+1)
+                        self.memoryIndex = index
                     }
+                    
                 }
-                let results = IpAdressModal(address: self.ipAdresses[index], success: message)
-                self.ipAdresModalArray.append(results)
+                    let results = IpAdressModal(address: self.ipAdresses[index], success: message)
+                    self.ipAdresModalArray.append(results)
+                DispatchQueue.main.async {
                 self.tableView.reloadData()
+                }
+            
             }
-            once?.targetCount = 1
-            try? once?.startPinging()
+        ping?.targetCount = 2
+        try? ping?.startPinging()
+            
         }
 //    func startPing(count:Int) {
 //
@@ -216,10 +275,10 @@ extension PingViewController: UITableViewDelegate,UITableViewDataSource{
         cell.IPText.text = ipAdresModalArray[indexPath.row].address
         
         if (indexPath.row % 2) != 0 { //index'i çift olanları beyaz diğerlerini açık gri yap
-                   cell.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-               }else{
-                   cell.backgroundColor = #colorLiteral(red: 0.9549764661, green: 0.9549764661, blue: 0.9549764661, alpha: 1)
-               }
+            cell.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        }else{
+            cell.backgroundColor = #colorLiteral(red: 0.9549764661, green: 0.9549764661, blue: 0.9549764661, alpha: 1)
+        }
         
         return cell
     }
