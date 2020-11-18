@@ -7,11 +7,17 @@
 
 import UIKit
 
+enum selectedFilter: Int {
+    case Ip = 0
+    case connectionType = 1
+   
+}
+
 class PingViewController: UIViewController {
-    var memoryIndex = 0
+  
     var ping: SwiftyPing?
     
-    
+    var desiredIPindex :Int?
     
     var timer = Timer()
     @IBOutlet var buttons: [UIButton]!
@@ -43,53 +49,95 @@ class PingViewController: UIViewController {
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
+        setupSearchBar()
         
-        timer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(progressBarUpdate), userInfo: nil, repeats: true)
+        
+        timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(progressBarUpdate), userInfo: nil, repeats: true)
         
         
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+       
+        filterButton.alpha = 0.5
+        filterButton.isEnabled = false
         
-        tableView.isHidden = true
         configureButtons()
         increaseIpAdress()
       
+        pinger(index: 0)
         
-        
-      
-            pinger(index: 0)
-        
-        
-        
-     
+       
     }
+    
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         ping?.stopPinging()
     }
+    
+    func setupSearchBar(){
+        let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: (UIScreen.main.bounds.width), height: 70))
+        searchBar.showsScopeBar = true
+        searchBar.scopeButtonTitles = ["IP adress","Connection Status"]
+        searchBar.delegate = self
+        self.tableView.tableHeaderView = searchBar
+        
+        
+    }
+    
+    func checkDesiredIPIndexIsActive(index:Int,desiredIP:Int?){
+        if desiredIP != nil {
+            self.pinger(index: index+1)
+            if index+1 == desiredIP! {
+                self.timer.invalidate()
+                self.ping?.stopPinging()
+                
+            }else{
+                if index+1 <= 254{
+                   self.pinger(index: index+1)
+               }else{
+                   self.ping?.stopPinging()
+               }
+            }
+        }else{
+            self.pinger(index: index+1)
+        }
+    }
+   
+    @IBAction func filterButtonTapped(_ sender: UIButton) {
+        
+    }
+    
     @IBAction func restartClicked(_ sender: UIButton) {
         timer.invalidate()
         secondsPassed = 0
         progressBarLabel.text = "0 %"
-        timer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(progressBarUpdate), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 0.4, target: self, selector: #selector(progressBarUpdate), userInfo: nil, repeats: true)
         ipAdresModalArray.removeAll()
         tableView.reloadData()
         
         pinger(index: 0)
-        
+        restartButton.alpha = 0.5
         stopButton.isEnabled = true
+        stopButton.alpha = 1
         filterButton.isEnabled = false
+        filterButton.alpha = 0.5
+        
         
     }
     
     @IBAction func stopButtonClicked(_ sender: UIButton) {
-        buttonCliked = false
+
         ping?.stopPinging()
         timer.invalidate()
         stopButton.isEnabled = false
+        stopButton.alpha = 0.5
         restartButton.isEnabled = true
+        restartButton.alpha = 1
         filterButton.isEnabled = true
+        filterButton.alpha = 1
+        
     }
     
   
@@ -127,38 +175,33 @@ class PingViewController: UIViewController {
         
     }
     
-    func congigureUI(){
-        
-        if Int(progressView.progress * 100) <= 5{
-            tableView.isHidden = true
-            progressBarLabel.isHidden = false
-            
-        }else{
-            progressBarLabel.isHidden = false
-            tableView.isHidden = false
-        }
-       
-    }
+   
     
     @objc func progressBarUpdate(){
+        
         if ipAdresses.isEmpty == false {
+            
             totalTime = ipAdresses.count
+            
             if secondsPassed < totalTime!{
-                secondsPassed += 1
                 
-              congigureUI()
-
+                secondsPassed += 1
                 progressView.progress = Float(secondsPassed) / Float(totalTime!)
                 progressBarLabel.text = String (Int(progressView.progress * 100)) + "%"
                 
             }else{
                 timer.invalidate()
                 secondsPassed = 0
+                stopButton.isEnabled = false
+                stopButton.alpha = 0.5
+                filterButton.isEnabled = true
+                
             }
         }
         
-        
     }
+    
+    
     
     func configureButtons(){
         for button in buttons{
@@ -168,95 +211,45 @@ class PingViewController: UIViewController {
     }
     
     func pinger(index: Int) {
-         ping = try? SwiftyPing(host: ipAdresses[index], configuration: PingConfiguration(interval: 0.5, with: 2), queue: DispatchQueue.global())
+        desiredIPindex = nil //my targerCount didnt work so I try to do some control with this. Defaults is nil
+        
+         ping = try? SwiftyPing(host: ipAdresses[index], configuration: PingConfiguration(interval: 0.5, with: 1), queue: DispatchQueue.global())
             ping?.observer = { (response) in
-               
+
                 var message = ""
                 if response.error != nil {
 
                     print(response.error!)
                     print("not reachable \(response.ipAddress!)")
                     message = "Unreachable"
-                    self.ping?.haltPinging()
-
-                    if index+1 <= 254 {
-                        self.pinger(index: index+1)
-                        self.memoryIndex = index
-                    }
+                    self.ping?.stopPinging()
+                    
+                    self.checkDesiredIPIndexIsActive(index: index, desiredIP: self.desiredIPindex)
+                    
                 } else {
                     print(response.ipAddress!)
                     print("Reachable")
                     message = "Reachable"
-                    self.ping?.haltPinging()
-
-
-                    if index+1 <= 254 {
-                        self.pinger(index: index+1)
-                        self.memoryIndex = index
-                    }
+                    self.ping?.stopPinging()
                     
+                    self.checkDesiredIPIndexIsActive(index: index, desiredIP: self.desiredIPindex)
                 }
                     let results = IpAdressModal(address: self.ipAdresses[index], success: message)
                     self.ipAdresModalArray.append(results)
+                
                 DispatchQueue.main.async {
                 self.tableView.reloadData()
                 }
-            
+                
             }
-        ping?.targetCount = 2
+
+        ping?.targetCount = 1 // It doesn't work I realy can't figure out why..
+
         try? ping?.startPinging()
-            
-        }
-//    func startPing(count:Int) {
-//
-//
-//        do {
-//            ping = try SwiftyPing(host: ipAdresses[count], configuration: PingConfiguration(interval: 1, with: 1 ), queue: DispatchQueue.global())
-//               ping?.observer = { (response) in
-//                   DispatchQueue.main.async {
-//                       var duration = "\(response.duration! * 1000) ms"
-//                    var message = "Reachable"
-//                       if let error = response.error {
-//
-//                           if error == .responseTimeout {
-//                               message = "Unreachable"
-//                           } else if error == .hostNotFound {
-//                               print(error)
-//                               message = "Unreachable"
-//                           }else{
-//                            message = "Unreachable"
-//                           }
-//                       }
-//
-//                    if count == 254{
-//                        self.ping?.stopPinging()
-//                    }else{
-//                        print(self.ipAdresses[count])
-//                        let results = IpAdressModal(address: self.ipAdresses[count], success: message)
-//                        self.ipAdresModalArray.append(results)
-//                           print(message)
-//                        print(duration)
-//                        self.startPing(count: count+1)
-//
-//
-//                    }
-//
-//
-//                   }
-////                let index = IndexPath(row: self.ipAdresModalArray.count-1, section: 0)
-////                    self.tableView.scrollToRow(at: index, at: .bottom, animated: true)
-//                self.tableView.reloadData()
-//
-//
-//               }
-//            // ping?.targetCount = 1
-//               try ping?.startPinging()
-//           } catch {
-//               print(error.localizedDescription)
-//           }
-//
-//    }
-    
+
+
+    }
+   
     
 
 }
@@ -285,4 +278,28 @@ extension PingViewController: UITableViewDelegate,UITableViewDataSource{
     
     
 }
+//extension PingViewController:UISearchBarDelegate{
+//
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//
+//        filterTableView(index: searchBar.selectedScopeButtonIndex,text: searchText)
+//    }
+//
+//    func filterTableView(index:Int,text:String){
+//        switch index {
+//        case selectedFilter.Ip.rawValue:
+//
+//            let filteredArray = ipAdresModalArray.filter { (filter) -> Bool in
+//                return filter.address.contains(text)
+//            }
+//        case selectedFilter.connectionType.rawValue:
+//            let filteredArray = ipAdresModalArray.filter { (filter) -> Bool in
+//                filter.success
+//            }
+//        default:
+//            <#code#>
+//        }
+//
+//    }
+//}
 
