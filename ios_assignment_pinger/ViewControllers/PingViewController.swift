@@ -8,17 +8,22 @@
 import UIKit
 
 enum selectedFilter: Int {
+    
     case Ip = 0
     case connectionType = 1
    
 }
 
 class PingViewController: UIViewController {
-  
+    
+    @IBOutlet weak var searchBarHeight: NSLayoutConstraint!
+    
     var ping: SwiftyPing?
     
     var desiredIPindex :Int?
+    var isFiltering = false
     
+    @IBOutlet weak var searchBar: UISearchBar!
     var timer = Timer()
     @IBOutlet var buttons: [UIButton]!
     
@@ -29,14 +34,14 @@ class PingViewController: UIViewController {
     var localIpAdress = ""
     var counter = 1
     var buttonCliked : Bool?
-    
+    var result : IpAdressModal?
     @IBOutlet weak var tableView: UITableView!
     
  
     var ipAdresModalArray = [IpAdressModal]() //An Array of IP Modal which I will use in tableView
     var ipAdresses = [String]() // I get this because when I ping ip adresses I need all the possible IP adresses
     var newIpAdress = "" // This is just string :)
-    
+    var filteredArray = [IpAdressModal]()
     
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var progressBarLabel: UILabel!
@@ -47,9 +52,11 @@ class PingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
         tableView.delegate = self
         tableView.dataSource = self
-        setupSearchBar()
+        searchBar.delegate = self
+      
         
         
         timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(progressBarUpdate), userInfo: nil, repeats: true)
@@ -59,12 +66,14 @@ class PingViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
        
+        searchBarHeight.constant = 0
         filterButton.alpha = 0.5
         filterButton.isEnabled = false
         
         configureButtons()
         increaseIpAdress()
-      
+        
+   
         pinger(index: 0)
         
        
@@ -77,12 +86,11 @@ class PingViewController: UIViewController {
     }
     
     func setupSearchBar(){
-        let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: (UIScreen.main.bounds.width), height: 70))
+        searchBarHeight.constant = 0
         searchBar.showsScopeBar = true
         searchBar.scopeButtonTitles = ["IP adress","Connection Status"]
-        searchBar.delegate = self
-        self.tableView.tableHeaderView = searchBar
         
+      
         
     }
     
@@ -106,7 +114,7 @@ class PingViewController: UIViewController {
     }
    
     @IBAction func filterButtonTapped(_ sender: UIButton) {
-        
+        searchBarHeight.constant = 44
     }
     
     @IBAction func restartClicked(_ sender: UIButton) {
@@ -123,7 +131,7 @@ class PingViewController: UIViewController {
         stopButton.alpha = 1
         filterButton.isEnabled = false
         filterButton.alpha = 0.5
-        
+        searchBarHeight.constant = 0
         
     }
     
@@ -137,6 +145,7 @@ class PingViewController: UIViewController {
         restartButton.alpha = 1
         filterButton.isEnabled = true
         filterButton.alpha = 1
+        searchBarHeight.constant = 0
         
     }
     
@@ -213,7 +222,7 @@ class PingViewController: UIViewController {
     func pinger(index: Int) {
         desiredIPindex = nil //my targerCount didnt work so I try to do some control with this. Defaults is nil
         
-         ping = try? SwiftyPing(host: ipAdresses[index], configuration: PingConfiguration(interval: 0.5, with: 1), queue: DispatchQueue.global())
+         ping = try? SwiftyPing(host: ipAdresses[index], configuration: PingConfiguration(interval: 0.1, with: 1), queue: DispatchQueue.global())
             ping?.observer = { (response) in
 
                 var message = ""
@@ -221,7 +230,7 @@ class PingViewController: UIViewController {
 
                     print(response.error!)
                     print("not reachable \(response.ipAddress!)")
-                    message = "Unreachable"
+                    message = "Unreachable "
                     self.ping?.stopPinging()
                     
                     self.checkDesiredIPIndexIsActive(index: index, desiredIP: self.desiredIPindex)
@@ -234,8 +243,9 @@ class PingViewController: UIViewController {
                     
                     self.checkDesiredIPIndexIsActive(index: index, desiredIP: self.desiredIPindex)
                 }
-                    let results = IpAdressModal(address: self.ipAdresses[index], success: message)
-                    self.ipAdresModalArray.append(results)
+                self.result = IpAdressModal(address: self.ipAdresses[index], success: message)
+                self.ipAdresModalArray.append(self.result!)
+                self.filteredArray = self.ipAdresModalArray
                 
                 DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -257,15 +267,16 @@ class PingViewController: UIViewController {
 extension PingViewController: UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ipAdresModalArray.count
+        return isFiltering ? filteredArray.count : ipAdresModalArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "pingCell", for: indexPath) as! pingTableViewCell
+        let user = isFiltering ? filteredArray[indexPath.row] : ipAdresModalArray[indexPath.row]
         
-        cell.IPStatusText.text = ipAdresModalArray[indexPath.row].success
-        cell.IPText.text = ipAdresModalArray[indexPath.row].address
+        cell.IPStatusText.text = user.success
+        cell.IPText.text = user.address
         
         if (indexPath.row % 2) != 0 { //index'i çift olanları beyaz diğerlerini açık gri yap
             cell.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -278,28 +289,41 @@ extension PingViewController: UITableViewDelegate,UITableViewDataSource{
     
     
 }
-//extension PingViewController:UISearchBarDelegate{
-//
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//
-//        filterTableView(index: searchBar.selectedScopeButtonIndex,text: searchText)
-//    }
-//
-//    func filterTableView(index:Int,text:String){
-//        switch index {
-//        case selectedFilter.Ip.rawValue:
-//
-//            let filteredArray = ipAdresModalArray.filter { (filter) -> Bool in
-//                return filter.address.contains(text)
-//            }
-//        case selectedFilter.connectionType.rawValue:
-//            let filteredArray = ipAdresModalArray.filter { (filter) -> Bool in
-//                filter.success
-//            }
-//        default:
-//            <#code#>
-//        }
-//
-//    }
-//}
+extension PingViewController:UISearchBarDelegate{
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        updateSearchResults(searchText: searchText)
+        
+    }
+   
+
+    func updateSearchResults(searchText: String) {
+        
+        if searchText.isEmpty {
+            
+            filteredArray.removeAll()
+            
+            isFiltering = false
+            
+        } else {
+            
+            if searchText.contains("able"){
+                
+                filteredArray = ipAdresModalArray.filter{$0.success.range(of: searchText, options: .caseInsensitive) != nil}
+                
+                isFiltering = true
+                
+            }else{
+                
+                filteredArray = ipAdresModalArray.filter{$0.address.range(of: searchText, options: .caseInsensitive) != nil }
+                
+                isFiltering = true
+            }
+        
+        }
+        
+        self.tableView.reloadData()
+    }
+}
 

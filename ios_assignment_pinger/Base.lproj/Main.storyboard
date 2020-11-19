@@ -134,7 +134,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="qdK-Rg-4Ay">
-                                <rect key="frame" x="0.0" y="235" width="414" height="661"/>
+                                <rect key="frame" x="0.0" y="279" width="414" height="617"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="pingCell" rowHeight="91" id="xla-tr-LaL" customClass="pingTableViewCell" customModule="ios_assignment_pinger" customModuleProvider="target">
@@ -297,21 +297,32 @@
                                     <constraint firstAttribute="height" constant="79" id="tNb-k2-Ukx"/>
                                 </constraints>
                             </view>
+                            <searchBar contentMode="redraw" placeholder="Filter by Adress or Connection Status" translatesAutoresizingMaskIntoConstraints="NO" id="c8T-Qx-fee">
+                                <rect key="frame" x="0.0" y="235" width="414" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="8zx-3T-xP3"/>
+                                </constraints>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="XSd-sX-9KC"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="qdK-Rg-4Ay" secondAttribute="bottom" id="0AV-Ho-YIX"/>
                             <constraint firstItem="d4k-9M-juP" firstAttribute="top" secondItem="XSd-sX-9KC" secondAttribute="top" id="2K6-tb-Sqo"/>
                             <constraint firstItem="eAG-nB-s88" firstAttribute="top" secondItem="d4k-9M-juP" secondAttribute="bottom" id="4xW-y9-u3l"/>
                             <constraint firstItem="eAG-nB-s88" firstAttribute="leading" secondItem="XSd-sX-9KC" secondAttribute="leading" id="KaE-jf-ThI"/>
                             <constraint firstItem="eAG-nB-s88" firstAttribute="trailing" secondItem="XSd-sX-9KC" secondAttribute="trailing" id="SmQ-vN-Hhf"/>
                             <constraint firstItem="d4k-9M-juP" firstAttribute="leading" secondItem="XSd-sX-9KC" secondAttribute="leading" id="Stt-fL-jP3"/>
+                            <constraint firstAttribute="bottom" secondItem="qdK-Rg-4Ay" secondAttribute="bottom" id="T5c-a7-XnJ"/>
                             <constraint firstItem="eAG-nB-s88" firstAttribute="top" secondItem="d4k-9M-juP" secondAttribute="bottom" id="Txz-DQ-bnT"/>
-                            <constraint firstItem="qdK-Rg-4Ay" firstAttribute="trailing" secondItem="XSd-sX-9KC" secondAttribute="trailing" id="guK-Di-4oX"/>
-                            <constraint firstItem="qdK-Rg-4Ay" firstAttribute="leading" secondItem="XSd-sX-9KC" secondAttribute="leading" id="jIY-4t-HRl"/>
+                            <constraint firstItem="qdK-Rg-4Ay" firstAttribute="top" secondItem="c8T-Qx-fee" secondAttribute="bottom" id="ZtD-vI-9Lp"/>
+                            <constraint firstItem="qdK-Rg-4Ay" firstAttribute="leading" secondItem="XSd-sX-9KC" secondAttribute="leading" id="aq9-Fd-gaZ"/>
+                            <constraint firstItem="c8T-Qx-fee" firstAttribute="leading" secondItem="XSd-sX-9KC" secondAttribute="leading" id="c0r-J6-NtQ"/>
+                            <constraint firstItem="qdK-Rg-4Ay" firstAttribute="trailing" secondItem="XSd-sX-9KC" secondAttribute="trailing" id="fxu-7K-lVh"/>
+                            <constraint firstItem="c8T-Qx-fee" firstAttribute="top" secondItem="eAG-nB-s88" secondAttribute="bottom" id="hjn-tD-bFv"/>
                             <constraint firstItem="d4k-9M-juP" firstAttribute="trailing" secondItem="XSd-sX-9KC" secondAttribute="trailing" id="kQJ-Jn-u91"/>
-                            <constraint firstItem="qdK-Rg-4Ay" firstAttribute="top" secondItem="eAG-nB-s88" secondAttribute="bottom" id="noW-AA-UVR"/>
+                            <constraint firstItem="qdK-Rg-4Ay" firstAttribute="top" secondItem="c8T-Qx-fee" secondAttribute="bottom" id="pOs-wm-a1w"/>
+                            <constraint firstItem="c8T-Qx-fee" firstAttribute="trailing" secondItem="XSd-sX-9KC" secondAttribute="trailing" id="qqZ-MM-W7V"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="PingerApp" id="2la-6c-9z5"/>
@@ -320,6 +331,8 @@
                         <outlet property="progressBarLabel" destination="ehl-xz-BZl" id="Voi-42-iZR"/>
                         <outlet property="progressView" destination="nbw-sl-1fo" id="byq-0l-scj"/>
                         <outlet property="restartButton" destination="aHF-5n-whl" id="fLI-e3-zaS"/>
+                        <outlet property="searchBar" destination="c8T-Qx-fee" id="uzP-fN-Kzz"/>
+                        <outlet property="searchBarHeight" destination="8zx-3T-xP3" id="WBo-Kg-pnT"/>
                         <outlet property="stopButton" destination="x6w-V5-c4h" id="6zy-Ny-cpd"/>
                         <outlet property="tableView" destination="qdK-Rg-4Ay" id="fU7-HY-pNq"/>
                         <outletCollection property="buttons" destination="x6w-V5-c4h" collectionClass="NSMutableArray" id="e1W-27-MSk"/>
