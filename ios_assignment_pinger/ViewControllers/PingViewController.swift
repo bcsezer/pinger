@@ -308,12 +308,17 @@ extension PingViewController:UISearchBarDelegate{
             
         } else {
             
-            if searchText.contains("able"){
+            if searchText.starts(with: "rea") {
                 
-                filteredArray = ipAdresModalArray.filter{$0.success.range(of: searchText, options: .caseInsensitive) != nil}
+                filteredArray = ipAdresModalArray.filter { $0.success.starts(with: "Rea")}
+//                filteredArray = ipAdresModalArray.filter{$0.success.range(of: searchText, options: .caseInsensitive) != nil}
                 
                 isFiltering = true
+//                    .filter { $0.contains("lo") }
+            }else if searchText.contains("un") || searchText.contains("Un"){
+                filteredArray = ipAdresModalArray.filter { $0.success.starts(with: "Un") }
                 
+                isFiltering = true
             }else{
                 
                 filteredArray = ipAdresModalArray.filter{$0.address.range(of: searchText, options: .caseInsensitive) != nil }
